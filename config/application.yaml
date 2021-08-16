@@ -1,9 +1,36 @@
 roman.numerals: '{
-                  i:1,
-                  v:5,
-                  x:10,
-                  l:50,
-                  c:100,
-                  d:500,
-                  m:1000
+  I:1,
+  V:5,
+  X:10,
+  L:50,
+  C:100,
+  D:500,
+  M:1000
+}'
+max.char.sequence.count: '{
+  I:3,
+  X:3,
+  C:3,
+  M:3,
+  D:1,
+  L:1,
+  V:1
+}'
+substraction.count.allowed: '{
+  I:1,
+  X:1,
+  C:1,
+  M:1,
+  D:1,
+  L:1,
+  V:1
+}'
+substraction.prechars.allowed: '{
+  I:"IVX",
+  X:"XLC",
+  C:"CDM",
+  V:"V",
+  L:"L",
+  D:"D",
+  M:"M"
 }'

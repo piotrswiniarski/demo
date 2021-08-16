@@ -22,7 +22,7 @@ public class DemoREST {
     }
 
     @PostMapping("/convert")
-    Integer newRL(@RequestBody String input) {
+    Integer newRL(@RequestBody String input) throws Exception{
         return romanNumeralsUtil.convertToNumber(input);
     }
 
