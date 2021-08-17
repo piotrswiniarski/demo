@@ -16,15 +16,6 @@ max.char.sequence.count: '{
   L:1,
   V:1
 }'
-substraction.count.allowed: '{
-  I:1,
-  X:1,
-  C:1,
-  M:1,
-  D:1,
-  L:1,
-  V:1
-}'
 substraction.prechars.allowed: '{
   I:"IVX",
   X:"XLC",

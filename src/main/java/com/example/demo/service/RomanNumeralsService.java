@@ -5,7 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RomanNumeralsService {
@@ -22,7 +26,29 @@ public class RomanNumeralsService {
 
     public Integer convertToNumber(String input) throws Exception {
         validateInput(input.toCharArray());
-        return getValueFromString(input);
+
+        String romanNumeral = input.toUpperCase();
+        int result = 0;
+
+        List<RomanNumeral> romanNumerals = RomanNumeral.getReverseSortedValues();
+
+        int i = 0;
+
+        while ((romanNumeral.length() > 0) && (i < romanNumerals.size())) {
+            RomanNumeral symbol = romanNumerals.get(i);
+            if (romanNumeral.startsWith(symbol.name())) {
+                result += symbol.getValue();
+                romanNumeral = romanNumeral.substring(symbol.name().length());
+            } else {
+                i++;
+            }
+        }
+
+        if (romanNumeral.length() > 0) {
+            throw new IllegalArgumentException(input + " cannot be converted to a Roman Numeral");
+        }
+
+        return result;
     }
     public int getValueFromString(String input) {
         int result = 0;
@@ -47,11 +73,11 @@ public class RomanNumeralsService {
     private void validateSubstractionPrecharsAllowed(char[] charArray) throws Exception {
         int inputLength = charArray.length;
         int count = 1;
-        for (int i = 1; i < inputLength; i++) {
-            if (substractionPrecharsAllowed.get(charArray[i - 1]).indexOf(charArray[i])>-1) {
-                continue;
-            } else {
-                throw new Exception();
+        for (int i = 1; i <inputLength; i++) {
+            if (romanNumerals.get(charArray[i]) > romanNumerals.get(charArray[i-1])) {
+                if (substractionPrecharsAllowed.get(charArray[i - 1]).indexOf(charArray[i])==-1) {
+                    throw new Exception();
+                }
             }
         }
     }
@@ -80,4 +106,25 @@ public class RomanNumeralsService {
         }
     }
 
+    enum RomanNumeral {
+        I(1), IV(4), V(5), IX(9), X(10),
+        XL(40), L(50), XC(90), C(100),
+        CD(400), D(500), CM(900), M(1000);
+
+        private int value;
+
+        RomanNumeral(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static List<RomanNumeral> getReverseSortedValues() {
+            return Arrays.stream(values())
+                    .sorted(Comparator.comparing((RomanNumeral e) -> e.value).reversed())
+                    .collect(Collectors.toList());
+        }
+    }
 }
