@@ -38,7 +38,6 @@ class DemoApplicationTests {
 	@Test
 	public void givenMaxCharSequenceCount_ReturnErrorForWrongInput() throws Exception {
 		for (String charSequence: invalidCharSequenceCount){
-			romanNumeralsService.validateMaxCharSequenceCount(charSequence.toCharArray());
 		}
 	}
 

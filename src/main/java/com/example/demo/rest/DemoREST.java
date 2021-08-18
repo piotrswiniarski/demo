@@ -4,11 +4,10 @@ import com.example.demo.service.RomanNumeralsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class DemoREST {
@@ -22,7 +21,7 @@ public class DemoREST {
     }
 
     @PostMapping("/convert")
-    Integer newRL(@RequestBody String input) throws Exception{
+    ResponseEntity<Object> newRL(@RequestBody String input){
         return romanNumeralsUtil.convertToNumber(input);
     }
 

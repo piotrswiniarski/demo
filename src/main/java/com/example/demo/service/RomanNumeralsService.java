@@ -3,6 +3,8 @@ package com.example.demo.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -24,31 +26,39 @@ public class RomanNumeralsService {
     @Value("#{${substraction.prechars.allowed}}")
     private Map<Character, String> substractionPrecharsAllowed;
 
-    public Integer convertToNumber(String input) throws Exception {
-        validateInput(input.toCharArray());
+    public ResponseEntity<Object> convertToNumber(String input)  {
+        char[] charArray = input.toCharArray();
+        try {
+            validateInputChars(charArray);
+            validateMaxCharSequenceCount(charArray);
+            validateSubstractionPrecharsAllowed(charArray);
+        }catch (IllegalArgumentException illegalArgumentException){
+            return new ResponseEntity<>(
+                    illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        String romanNumeral = input.toUpperCase();
         int result = 0;
 
         List<RomanNumeral> romanNumerals = RomanNumeral.getReverseSortedValues();
 
         int i = 0;
 
-        while ((romanNumeral.length() > 0) && (i < romanNumerals.size())) {
+        while ((input.length() > 0) && (i < romanNumerals.size())) {
             RomanNumeral symbol = romanNumerals.get(i);
-            if (romanNumeral.startsWith(symbol.name())) {
+            if (input.startsWith(symbol.name())) {
                 result += symbol.getValue();
-                romanNumeral = romanNumeral.substring(symbol.name().length());
+                input = input.substring(symbol.name().length());
             } else {
                 i++;
             }
         }
 
-        if (romanNumeral.length() > 0) {
+        if (input.length() > 0) {
             throw new IllegalArgumentException(input + " cannot be converted to a Roman Numeral");
         }
 
-        return result;
+        return new ResponseEntity<Object>(
+                result, HttpStatus.OK);
     }
     public int getValueFromString(String input) {
         int result = 0;
@@ -64,31 +74,39 @@ public class RomanNumeralsService {
         return result;
     }
 
-    private void validateInput(char[] charArray) throws Exception {
-        validateInputChars(charArray);
-        validateMaxCharSequenceCount(charArray);
-        validateSubstractionPrecharsAllowed(charArray);
+    private void validateInput(char[] charArray) throws IllegalArgumentException {
+        try{
+            validateInputChars(charArray);
+            validateMaxCharSequenceCount(charArray);
+            validateSubstractionPrecharsAllowed(charArray);
+        }catch(IllegalArgumentException illegalArgumentException){
+            throw illegalArgumentException;
+        }
     }
 
-    private void validateSubstractionPrecharsAllowed(char[] charArray) throws Exception {
+    private void validateSubstractionPrecharsAllowed(char[] charArray)  {
         int inputLength = charArray.length;
         int count = 1;
         for (int i = 1; i <inputLength; i++) {
             if (romanNumerals.get(charArray[i]) > romanNumerals.get(charArray[i-1])) {
                 if (substractionPrecharsAllowed.get(charArray[i - 1]).indexOf(charArray[i])==-1) {
-                    throw new Exception();
+                    throw new IllegalArgumentException("Provided input is not valid for substraction.");
                 }
             }
         }
     }
 
-    private void validateInputChars(char[] charArray) throws NullPointerException {
-        for (char c : charArray) {
-            romanNumerals.get(c);
+    private void validateInputChars(char[] charArray)  {
+        try{
+            for (char c : charArray) {
+                romanNumerals.get(c);
+            }
+        }catch (NullPointerException nullPointerException){
+            throw new IllegalArgumentException("Provided input does not consist of allowed Roman Numbers");
         }
     }
 
-    public void validateMaxCharSequenceCount(char[] charArray) throws Exception {
+    public void validateMaxCharSequenceCount(char[] charArray) {
         int inputLength = charArray.length;
         if (inputLength < 2) {
             return;
@@ -98,7 +116,7 @@ public class RomanNumeralsService {
             if (charArray[i] == charArray[i - 1]) {
                 count++;
                 if (count > additionCountAllowed.get(charArray[i])) {
-                    throw new Exception();
+                    throw new IllegalArgumentException("Exceeded max characters in sequence.");
                 }
             } else {
                 count = 0;
