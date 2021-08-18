@@ -15,7 +15,10 @@ import java.util.Map;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-@TestPropertySource("classpath:romanNumbers.yaml")
+@TestPropertySources({
+		@TestPropertySource("classpath:romanNumbers.yaml"),
+		@TestPropertySource("classpath:invalidInput.yaml"),
+})
 class DemoApplicationTests {
 	@Autowired
 	RomanNumeralsService romanNumeralsService;
@@ -29,11 +32,14 @@ class DemoApplicationTests {
 	@Value("#{${test.set4}}")
 	public Map<Integer, String> set4;
 
+	@Value("#{${invalid.char.sequence.count}}")
+	public String[] invalidCharSequenceCount;
+
 	@Test
-	public void givenMCMXCIX_Return1999() throws Exception {
-		int arabic1999 = 1999;
-		int result = romanNumeralsService.convertToNumber("MCMXCIX");
-		assertThat(result).isEqualTo(arabic1999);
+	public void givenMaxCharSequenceCount_ReturnErrorForWrongInput() throws Exception {
+		for (String charSequence: invalidCharSequenceCount){
+			romanNumeralsService.validateMaxCharSequenceCount(charSequence.toCharArray());
+		}
 	}
 
 	@Test

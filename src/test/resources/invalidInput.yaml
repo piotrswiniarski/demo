@@ -1,0 +1,19 @@
+invalid.char.sequence.count={\
+  "IIII",\
+  "XXXX",\
+  "CCCC",\
+  "XXXX",\
+  "MMMM",\
+  "DD",\
+  "LL",\
+  "VV"\
+}
+
+invalid.substraction={\
+  "IIV",\
+  "IIX",\
+  "XXL",\
+  "XXC",\
+  "CCD",\
+  "CCM"\
+}

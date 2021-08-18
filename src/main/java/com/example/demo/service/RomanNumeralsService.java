@@ -88,7 +88,7 @@ public class RomanNumeralsService {
         }
     }
 
-    private void validateMaxCharSequenceCount(char[] charArray) throws Exception {
+    public void validateMaxCharSequenceCount(char[] charArray) throws Exception {
         int inputLength = charArray.length;
         if (inputLength < 2) {
             return;
