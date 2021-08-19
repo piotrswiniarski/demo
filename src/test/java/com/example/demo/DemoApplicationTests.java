@@ -65,7 +65,7 @@ class DemoApplicationTests {
                     () -> {
                         romanNumeralsService.validateInputChars(invalidChar.toCharArray());
                     });
-            assertTrue(illegalArgumentException.getMessage().equals("Provided input does not consist of allowed Roman Numbers"));
+            assertTrue(illegalArgumentException.getMessage().equals("Provided input does not consist of allowed Roman Numbers."));
         }
     }
 

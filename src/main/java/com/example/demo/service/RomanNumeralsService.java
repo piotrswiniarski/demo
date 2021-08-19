@@ -35,6 +35,7 @@ public class RomanNumeralsService {
             validateInputChars(charArray);
             validateMaxCharSequenceCount(charArray);
             validateSubstractionPrecharsAllowed(charArray);
+            validateForbiddenSequence(input);
         } catch (IllegalArgumentException illegalArgumentException) {
             return new ResponseEntity<>(
                     illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
@@ -88,7 +89,7 @@ public class RomanNumeralsService {
     public void validateInputChars(char[] charArray) {
         for (char c : charArray) {
             if (romanNumerals.get(c) == null) {
-                throw new IllegalArgumentException("Provided input does not consist of allowed Roman Numbers");
+                throw new IllegalArgumentException("Provided input does not consist of allowed Roman Numbers.");
             }
         }
     }
@@ -106,7 +107,7 @@ public class RomanNumeralsService {
                     throw new IllegalArgumentException("Exceeded max characters in sequence.");
                 }
             } else {
-                count = 0;
+                count = 1;
             }
         }
     }
