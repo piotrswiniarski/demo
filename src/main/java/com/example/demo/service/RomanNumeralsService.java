@@ -26,13 +26,16 @@ public class RomanNumeralsService {
     @Value("#{${substraction.prechars.allowed}}")
     private Map<Character, String> substractionPrecharsAllowed;
 
-    public ResponseEntity<Object> convertToNumber(String input)  {
+    @Value("${forbidden.substraction.sequences}")
+    private String[] forbiddenSequences;
+
+    public ResponseEntity<Object> convertToNumber(String input) {
         char[] charArray = input.toCharArray();
         try {
             validateInputChars(charArray);
             validateMaxCharSequenceCount(charArray);
             validateSubstractionPrecharsAllowed(charArray);
-        }catch (IllegalArgumentException illegalArgumentException){
+        } catch (IllegalArgumentException illegalArgumentException) {
             return new ResponseEntity<>(
                     illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -53,13 +56,11 @@ public class RomanNumeralsService {
             }
         }
 
-        if (input.length() > 0) {
-            throw new IllegalArgumentException(input + " cannot be converted to a Roman Numeral");
-        }
 
         return new ResponseEntity<Object>(
                 result, HttpStatus.OK);
     }
+
     public int getValueFromString(String input) {
         int result = 0;
         for (int i = 0; i < input.length(); i++) {
@@ -74,35 +75,21 @@ public class RomanNumeralsService {
         return result;
     }
 
-    private void validateInput(char[] charArray) throws IllegalArgumentException {
-        try{
+    private void validateInput(char[] charArray) {
+        try {
             validateInputChars(charArray);
             validateMaxCharSequenceCount(charArray);
             validateSubstractionPrecharsAllowed(charArray);
-        }catch(IllegalArgumentException illegalArgumentException){
-            throw illegalArgumentException;
+        } catch (Exception illegalArgumentException) {
+            System.out.println(illegalArgumentException);
         }
     }
 
-    private void validateSubstractionPrecharsAllowed(char[] charArray)  {
-        int inputLength = charArray.length;
-        int count = 1;
-        for (int i = 1; i <inputLength; i++) {
-            if (romanNumerals.get(charArray[i]) > romanNumerals.get(charArray[i-1])) {
-                if (substractionPrecharsAllowed.get(charArray[i - 1]).indexOf(charArray[i])==-1) {
-                    throw new IllegalArgumentException("Provided input is not valid for substraction.");
-                }
+    public void validateInputChars(char[] charArray) {
+        for (char c : charArray) {
+            if (romanNumerals.get(c) == null) {
+                throw new IllegalArgumentException("Provided input does not consist of allowed Roman Numbers");
             }
-        }
-    }
-
-    private void validateInputChars(char[] charArray)  {
-        try{
-            for (char c : charArray) {
-                romanNumerals.get(c);
-            }
-        }catch (NullPointerException nullPointerException){
-            throw new IllegalArgumentException("Provided input does not consist of allowed Roman Numbers");
         }
     }
 
@@ -120,6 +107,28 @@ public class RomanNumeralsService {
                 }
             } else {
                 count = 0;
+            }
+        }
+    }
+
+    public void validateSubstractionPrecharsAllowed(char[] charArray) {
+        int inputLength = charArray.length;
+        int count = 1;
+        for (int i = 1; i < inputLength; i++) {
+            if (romanNumerals.get(charArray[i]) > romanNumerals.get(charArray[i - 1])) {
+                if (substractionPrecharsAllowed.get(charArray[i - 1]).indexOf(charArray[i]) == -1 ||
+                        (i > 1 && romanNumerals.get(charArray[i - 1]) == romanNumerals.get(charArray[i - 2])) ||
+                        (i < (inputLength - 1) && romanNumerals.get(charArray[i]) == romanNumerals.get(charArray[i + 1]))) {
+                    throw new IllegalArgumentException("Provided input is not valid for substraction.");
+                }
+            }
+        }
+    }
+
+    public void validateForbiddenSequence(String input) {
+        for (String forbiddenSequence : forbiddenSequences) {
+            if (input.contains(forbiddenSequence)) {
+                throw new IllegalArgumentException("Provided input is not valid for substraction.");
             }
         }
     }

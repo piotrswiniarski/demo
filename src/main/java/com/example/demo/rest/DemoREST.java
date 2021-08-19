@@ -15,13 +15,14 @@ public class DemoREST {
     RomanNumeralsService romanNumeralsUtil;
 
     private static final Logger log = LoggerFactory.getLogger(DemoREST.class);
+
     @GetMapping("/status")
     String status() {
         return "up";
     }
 
     @PostMapping("/convert")
-    ResponseEntity<Object> newRL(@RequestBody String input){
+    ResponseEntity<Object> newRL(@RequestBody String input) {
         return romanNumeralsUtil.convertToNumber(input);
     }
 

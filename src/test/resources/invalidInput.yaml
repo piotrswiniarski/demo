@@ -9,11 +9,43 @@ invalid.char.sequence.count={\
   "VV"\
 }
 
-invalid.substraction={\
+invalid.chars={\
+  "A",\
+  "B",\
+  "E",\
+  "F",\
+  "a",\
+  "b",\
+  "e",\
+  "f",\
+  "1",\
+  "5",\
+  "10",\
+  "50",\
+  "IA",\
+  "XB",\
+  "LE",\
+  "DF",\
+  "*",\
+  "!",\
+  "#",\
+  "&"\
+}
+
+
+invalid.substraction.sequences={\
   "IIV",\
   "IIX",\
   "XXL",\
   "XXC",\
   "CCD",\
-  "CCM"\
+  "CCM",\
+  "XIXX",\
+  "XIVX"\
+}
+
+forbidden.sequences={\
+  "XVIV",\
+  "LXLX",\
+  "MDCDL"\
 }

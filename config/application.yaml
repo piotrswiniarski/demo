@@ -25,3 +25,5 @@ substraction.prechars.allowed: '{
   D:"D",
   M:"M"
 }'
+
+forbidden.substraction.sequences: VIV, LXL, DCD
